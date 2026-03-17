@@ -16,6 +16,8 @@ namespace Portafolio
             services.AddScoped<IUsuario, UsuarioRepositorie>();
             services.AddScoped<IImagen, ImagenRepositorie>();
             services.AddScoped<IProyecto, ProyectoRepositorie>();
+            services.AddScoped<ITecnologia, TecnologiaRepositorie>();
+            services.AddScoped<ITecnologiaProyecto, TecnologiaProyectoRepositorie>();
 
             return services;
         }
