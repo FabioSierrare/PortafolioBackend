@@ -34,7 +34,9 @@ namespace Portafolio.Repositorie
 
         public async Task<bool> DeleteUsuario(int id)
         {
-            var user = await _context.Usuario.FirstAsync(u => u.Id == id);
+            var user = await _context.Usuario.FindAsync(id);
+            if (user == null) return false;
+
             _context.Usuario.Remove(user);
             await _context.SaveChangesAsync();
             return true;
