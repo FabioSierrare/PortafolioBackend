@@ -3,6 +3,8 @@
     public class TecnologiaProyecto
     {
         public int ProyectoId { get; set; }
+        public Proyecto Proyecto { get; set; }
         public int TecnologiaId { get; set; }
+        public Tecnologia Tecnologia { get; set; }
     }
 }

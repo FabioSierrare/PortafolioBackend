@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore;
 using Portafolio.Model;
 
 namespace Portafolio.Context
@@ -39,17 +40,31 @@ namespace Portafolio.Context
             modelBuilder.Entity<Proyecto>().Property(p => p.UrlGitHub);
             modelBuilder.Entity<Proyecto>().Property(p => p.UrlDemo);
             modelBuilder.Entity<Proyecto>().Property(p => p.ImgId);
+            modelBuilder.Entity<Proyecto>().HasOne(p => p.Imagen).WithMany().HasForeignKey(p => p.ImgId);
 
             modelBuilder.Entity<Tecnologia>().ToTable("Tecnologia");
             modelBuilder.Entity<Tecnologia>().HasKey(t => t.Id);
             modelBuilder.Entity<Tecnologia>().Property(t => t.Id);
             modelBuilder.Entity<Tecnologia>().Property(t => t.Nombre);
             modelBuilder.Entity<Tecnologia>().Property(t => t.ImgId);
+            modelBuilder.Entity<Tecnologia>()
+            .HasOne(t => t.Imagen)
+            .WithMany()
+            .HasForeignKey(t => t.ImgId);
 
             modelBuilder.Entity<TecnologiaProyecto>().ToTable("TecnologiaProyecto");
             modelBuilder.Entity<TecnologiaProyecto>().HasKey(tp => new { tp.ProyectoId, tp.TecnologiaId });
             modelBuilder.Entity<TecnologiaProyecto>().Property(tp => tp.ProyectoId);
             modelBuilder.Entity<TecnologiaProyecto>().Property(tp => tp.TecnologiaId);
+            modelBuilder.Entity<TecnologiaProyecto>()
+    .HasOne(tp => tp.Proyecto)
+    .WithMany(p => p.TecnologiaProyecto) // 👈 AQUÍ está el fix
+    .HasForeignKey(tp => tp.ProyectoId);
+
+            modelBuilder.Entity<TecnologiaProyecto>()
+                .HasOne(tp => tp.Tecnologia)
+                .WithMany(t => t.TecnologiaProyectos) // 👈 este ya está bien
+                .HasForeignKey(tp => tp.TecnologiaId);
         }
     }
 }

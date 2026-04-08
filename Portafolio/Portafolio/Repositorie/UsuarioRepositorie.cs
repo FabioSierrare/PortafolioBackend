@@ -20,6 +20,8 @@ namespace Portafolio.Repositorie
 
         public async Task<bool> PostUsuario(Usuario user)
         {
+            user.Contraseña = BCrypt.Net.BCrypt.HashPassword(user.Contraseña);
+
             await _context.Usuario.AddAsync(user);
             var res = _context.SaveChangesAsync();
             return true;

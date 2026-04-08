@@ -76,5 +76,27 @@ namespace Portafolio.Controllers
                 return BadRequest(error.Message);
             }
         }
+
+        [HttpPost("PostTec")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> PostTecnologia([FromForm] TecnologiaImagen tec)
+        {
+            try
+            {
+                if(tec.Imagen.Length < 1 || string.IsNullOrEmpty(tec.Nombre))
+                {
+                    throw new Exception("Datos incompletos");
+                }
+
+                var res = await _Tecnologia.PostTecnologia(tec);
+                return Ok("Tecnologia agregado correctamente");
+            }
+            catch (Exception error)
+            {
+                return BadRequest(error.Message);
+            }
+        }
     }
 }

@@ -8,9 +8,11 @@ namespace Portafolio.Repositorie
     public class TecnologiaRepositorie : ITecnologia
     {
         private readonly ContextDB _context;
-        public TecnologiaRepositorie(ContextDB context)
+        private readonly ICloudy _cloudinary;
+        public TecnologiaRepositorie(ContextDB context, ICloudy cloudy)
         {
             _context = context;
+            _cloudinary = cloudy;
         }
         public async Task<List<Tecnologia>> GetTecnologia()
         {
@@ -40,6 +42,41 @@ namespace Portafolio.Repositorie
             _context.Tecnologia.Remove(tec);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<bool> PostTecnologia(TecnologiaImagen tec)
+        {
+            var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var file = tec.Imagen;
+
+                var url = await _cloudinary.GuardarImagen(file, "Tecnologia");
+
+                Imagen img = new Imagen
+                {
+                    Url = url
+                };
+
+                Tecnologia tecno = new Tecnologia
+                {
+                    Nombre = tec.Nombre,
+                    Imagen = img
+                };
+
+                _context.Tecnologia.Add(tecno);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                Console.WriteLine(ex.Message);
+                throw new Exception("Error si señor");
+            }
         }
     }
 }

@@ -2,6 +2,8 @@
 using Portafolio.Context;
 using Portafolio.Repositorie;
 using Portafolio.Repositorie.Interfaces;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 
 namespace Portafolio
 {
@@ -18,6 +20,18 @@ namespace Portafolio
             services.AddScoped<IProyecto, ProyectoRepositorie>();
             services.AddScoped<ITecnologia, TecnologiaRepositorie>();
             services.AddScoped<ITecnologiaProyecto, TecnologiaProyectoRepositorie>();
+            services.AddScoped<ICloudy, CloudinaryRepositorie>();
+
+            services.AddSingleton<Cloudinary>(x =>
+            {
+            var account = new Account(
+                configuration["Cloudinary:CloudName"],
+                configuration["Cloudinary:ApiKey"],
+                configuration["Cloudinary:SecretKey"]
+            );
+
+                return new Cloudinary(account);
+            });
 
             return services;
         }

@@ -8,5 +8,6 @@ namespace Portafolio.Repositorie.Interfaces
         Task<bool> PostTecnologia(Tecnologia tecn);
         Task<bool> PutTecnologia(Tecnologia tecn);
         Task<bool> DeleteTecnologia(int id);
+        Task<bool> PostTecnologia(TecnologiaImagen tecn);
     }
 }
